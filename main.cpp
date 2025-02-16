@@ -9,6 +9,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+#include <windows.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -67,7 +68,9 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     aspectRatio = (float)w / (float)h;
 }
 
-int main() {
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+    SetDllDirectory("..\\bin");
+
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
