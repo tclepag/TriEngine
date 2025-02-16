@@ -6,14 +6,16 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
 #include <windows.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
+
+#include "TriEngine/scripts/core/Screen.hpp"
+
+using namespace tri;
+using namespace core;
 
 std::string get_file_contents(const char* filename)
 {
@@ -59,13 +61,8 @@ int h = 600;
 
 float aspectRatio = (float)w / (float)h;
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-    // Update the viewport
-    glViewport(0, 0, width, height);
-    w = width;
-    h = height;
-
-    aspectRatio = (float)w / (float)h;
+void error_callback(int error, const char* description) {
+    std::cerr << "GLFW Error " << error << ": " << description << std::endl;
 }
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
@@ -76,35 +73,17 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(w, h, "TriEngine", nullptr, nullptr);
-    if (window == nullptr) {
-        std::cout << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
+    glfwSetErrorCallback(error_callback);
 
-    int ico_width, ico_height, channels;
-    unsigned char* pixels = stbi_load("content/images/app.bmp", &ico_width, &ico_height, &channels, STBI_rgb_alpha);
-    if (pixels == nullptr) {
-        std::cout << "Failed to load image" << std::endl;
-        stbi_image_free(pixels);
-        return -1;
-    }
-
-    GLFWimage icon;
-    icon.width = ico_width;
-    icon.height = ico_height;
-    icon.pixels = pixels;
-
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(0);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-    glfwSetWindowIcon(window, 1, &icon);
+    auto* mainScreen = new Screen(
+        800,
+        600,
+        "TestApp"
+    );
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
-        glfwDestroyWindow(window);
+        mainScreen->close();
         glfwTerminate();
         return -1;
     }
@@ -199,9 +178,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
     glEnable(GL_DEPTH_TEST);
 
-    while (!glfwWindowShouldClose(window)) {
-        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-            glfwSetWindowShouldClose(window, GLFW_TRUE);
+    while (!glfwWindowShouldClose(mainScreen->wnd())) {
+        if (glfwGetKey(mainScreen->wnd(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+            mainScreen->windowToClose(true);
         }
 
         // Clear the background buffer and set the background color to black
@@ -272,9 +251,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
         // The drawing was done in the background buffer
         // We swap our buffers to show the results
-        glfwSwapBuffers(window);
+        glfwSwapBuffers(mainScreen->wnd());
         glfwPollEvents();
     }
 
+    mainScreen->close();
+    glfwTerminate();
     return 0;
 }

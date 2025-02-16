@@ -21,7 +21,11 @@ find_package(glad REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(Stb REQUIRED)
 
-add_executable(TriEngine main.cpp)
+add_executable(TriEngine main.cpp
+        TriEngine/scripts/core/Screen.cpp
+        TriEngine/scripts/core/Screen.hpp
+        TriEngine/scripts/util/Image.cpp
+        TriEngine/scripts/util/Image.hpp)
 
 target_include_directories(TriEngine PUBLIC
         ${Stb_INCLUDE_DIR}
