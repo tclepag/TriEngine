@@ -2,7 +2,7 @@
 // Created by lepag on 2/16/2025.
 //
 
-#include "ActorComponent.hpp"
+#include "ActorComponent.h"
 
 namespace tri {
     ActorComponent::ActorComponent() {

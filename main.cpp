@@ -12,9 +12,9 @@
 #include <sstream>
 #include <string>
 
-#include "TriEngine/scripts/core/Screen.hpp"
-#include "TriEngine/scripts/classes/Actor.hpp"
-#include "TriEngine/scripts/classes/components/Mesh.hpp"
+#include "TriEngine/scripts/core/Screen.h"
+#include "TriEngine/scripts/classes/Actor.h"
+#include "TriEngine/scripts/classes/components/Mesh.h"
 
 using namespace tri;
 using namespace core;

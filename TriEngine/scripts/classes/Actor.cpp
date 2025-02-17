@@ -2,7 +2,7 @@
 // Created by lepag on 2/16/2025.
 //
 
-#include "Actor.hpp"
+#include "Actor.h"
 
 namespace tri {
     Actor::Actor(Actor* parent_actor) {

@@ -2,7 +2,7 @@
 // Created by lepag on 2/16/2025.
 //
 
-#include "Shader.hpp"
+#include "Shader.h"
 
 #include <glm/gtc/type_ptr.hpp>
 

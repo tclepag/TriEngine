@@ -2,7 +2,7 @@
 // Created by lepag on 2/16/2025.
 //
 
-#include "Screen.hpp"
+#include "Screen.h"
 
 
 namespace tri::core {

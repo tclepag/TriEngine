@@ -12,7 +12,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "../util/Image.hpp"
+#include "../util/Image.h"
 
 
 namespace tri::core {

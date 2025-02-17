@@ -2,7 +2,7 @@
 // Created by lepag on 2/16/2025.
 //
 
-#include "Mesh.hpp"
+#include "Mesh.h"
 
 // Vertices coordinates
 std::vector vertices =

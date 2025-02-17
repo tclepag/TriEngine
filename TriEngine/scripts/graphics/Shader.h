@@ -11,7 +11,7 @@
 #include <glad/glad.h>
 #include <glm/fwd.hpp>
 
-#include "../util/File.hpp"
+#include "../util/File.h"
 
 
 namespace tri::graphics {
