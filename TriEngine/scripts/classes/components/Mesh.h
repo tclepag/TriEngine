@@ -5,7 +5,7 @@
 #ifndef MESH_HPP
 #define MESH_HPP
 
-#include "ActorComponent.hpp"
+#include "ActorComponent.h"
 #include "../../core/Screen.h"
 #include "../../graphics/ObjectBuffer.h"
 #include "../../graphics/Shader.h"

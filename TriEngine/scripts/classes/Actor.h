@@ -11,7 +11,7 @@
 #include <vector>
 #include <glad/glad.h>
 
-#include "components/ActorComponent.hpp"
+#include "components/ActorComponent.h"
 
 namespace tri {
 class Actor {
