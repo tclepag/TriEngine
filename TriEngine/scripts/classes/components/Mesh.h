@@ -6,9 +6,9 @@
 #define MESH_HPP
 
 #include "ActorComponent.hpp"
-#include "../../core/Screen.hpp"
-#include "../../graphics/ObjectBuffer.hpp"
-#include "../../graphics/Shader.hpp"
+#include "../../core/Screen.h"
+#include "../../graphics/ObjectBuffer.h"
+#include "../../graphics/Shader.h"
 
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>

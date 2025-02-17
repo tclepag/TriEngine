@@ -23,23 +23,23 @@ find_package(Stb REQUIRED)
 
 add_executable(TriEngine main.cpp
         TriEngine/scripts/core/Screen.cpp
-        TriEngine/scripts/core/Screen.hpp
+        TriEngine/scripts/core/Screen.h
         TriEngine/scripts/util/Image.cpp
-        TriEngine/scripts/util/Image.hpp
+        TriEngine/scripts/util/Image.h
         TriEngine/scripts/graphics/Shader.cpp
-        TriEngine/scripts/graphics/Shader.hpp
+        TriEngine/scripts/graphics/Shader.h
         TriEngine/scripts/util/File.cpp
-        TriEngine/scripts/util/File.hpp
+        TriEngine/scripts/util/File.h
         TriEngine/scripts/classes/Actor.cpp
-        TriEngine/scripts/classes/Actor.hpp
+        TriEngine/scripts/classes/Actor.h
         TriEngine/scripts/graphics/VertexArrayObject.cpp
         TriEngine/scripts/graphics/VertexArrayObject.hpp
         TriEngine/scripts/graphics/ObjectBuffer.cpp
-        TriEngine/scripts/graphics/ObjectBuffer.hpp
+        TriEngine/scripts/graphics/ObjectBuffer.h
         TriEngine/scripts/classes/components/ActorComponent.cpp
         TriEngine/scripts/classes/components/ActorComponent.hpp
         TriEngine/scripts/classes/components/Mesh.cpp
-        TriEngine/scripts/classes/components/Mesh.hpp)
+        TriEngine/scripts/classes/components/Mesh.h)
 
 target_include_directories(TriEngine PUBLIC
         ${Stb_INCLUDE_DIR}

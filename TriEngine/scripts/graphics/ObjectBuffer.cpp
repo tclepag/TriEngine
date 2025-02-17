@@ -2,7 +2,7 @@
 // Created by lepag on 2/16/2025.
 //
 
-#include "ObjectBuffer.hpp"
+#include "ObjectBuffer.h"
 
 #include <iostream>
 #include <ostream>
