@@ -1,82 +1,68 @@
 //
-// Created by lepag on 2/16/2025.
+// Created by lepag on 2/17/2025.
 //
 
-#ifndef SCREEN_HPP
-#define SCREEN_HPP
+#ifndef SCREEN_H
+#define SCREEN_H
 
-#include <iostream>
-#include <stdexcept>
+#include <windows.h>
+#include <unordered_map>
+#include <string>
 #include <vector>
-
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
-#include "../util/Image.h"
+#include <stdexcept>
 
 
 namespace tri::core {
 
-class Screen final {
-public:
-    int width, height;
-public:
-    explicit Screen(int width = 800, int height = 600, const char* title = "TriWindow", const char* iconPath = "content/images/app.bmp");
-
-    virtual ~Screen();
-
-    // Returns the GLFWwindow associated with this Screen
-    GLFWwindow* wnd();
-    // Ran every frame
-    // If active is false then you must call destruction
-    virtual void render();
-    // Runs glfwSetWindowToClose, if true then it will try to stop the mainloop and destroy this window
-    void windowToClose(bool toClose);
-    // Returns whether the window is set to close
-    bool windowClosing();
-    // Sets the windows width
-    int windowWidth(int width);
-    // Sets the windows height
-    int windowHeight(int height);
-    // Sets the windows title
-    void windowTitle(const char* title) const;
-    // Sets the windows icon
-    void windowIcon(const char* iconPath);
-    // Sets the window to be current context
-    void focus() const;
-    // Removes the window from current context if it ever was the context
-    void unfocus() const;
-    // Gets aspect ratio
-    [[nodiscard]] float aspectRatio() const;
-
-    // Closes
-    void close() {
-        this->~Screen();
+class Screen {
+    struct ScreenInfo {
+        int width = 800;
+        int height = 600;
+        std::string title = "Window";
+        std::string className = "GLFWWindowClass";
     };
-    // Creates a subscreen
-    Screen* subScreen(int width = 800, int height = 600, const char* title = "TriWindow", const char* iconPath = "content/images/app.bmp") {
-        auto* s = new Screen(width, height, title, iconPath);
-        m_screens.emplace_back(s);
-        return s;
-    }
-    // Returns the current screen that is focused
-    static Screen* currentContext();
-    // Returns the screen that uses this window
-    static Screen* screenFromWindow(GLFWwindow *window);
-    // Gets all subscreens
-    std::vector<Screen*> subScreens();
-    // Returns the mainScreen
-    static Screen* main();
+
+    struct WindowProcedure {
+        UINT result;
+        WPARAM wParam;
+        LPARAM lParam;
+    };
+public:
+    static Screen* main;
+    static Screen* createMainInstance(const ScreenInfo& info);
+
+    Screen* createChildInstance(const ScreenInfo& info);
+    [[nodiscard]] WindowProcedure GetWindowProc() const; // Returns the last window procedure result
+    MSG GrabNewMessage(); // Peeks and returns a msg to be used for dispatching
+    [[nodiscard]] MSG NoPeekMessage() const; // Returns the current msg without peeking
+    void Dispatch() const; // Translates and dispatches the message
+    void Destroy() const; // Destroys this windowClass
+    void SetContextNew() const; // Sets the Window OpenGL context to this window, if it hasn't already been set
+    void Swap() const; // Swaps the foreground with the background buffer
+    float AspectRatio() const; // Returns the aspect ratio of this window (width / height)
+    static Screen* GetContextScreen(); // Returns the Screen associated with the current context
 private:
-    static Screen* mainScreen;
-    static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+    explicit Screen(ScreenInfo info);
+    ~Screen();
+
+    MSG m_msg;
+    WNDCLASSEX m_wc = {};
+    HWND m_hwnd;
+    HDC m_hdc;
+    HINSTANCE m_hInstance;
+    PIXELFORMATDESCRIPTOR m_pixelDescriptor;
+    int m_pixelFormat;
+    HGLRC m_context;
+    static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+    ScreenInfo m_Info;
+    std::vector<Screen*> m_children;
+    static std::unordered_map<HGLRC, Screen*> m_screenContextList;
 protected:
-    GLFWwindow* m_wnd;
-    std::vector<Screen*> m_screens;
-    std::weak_ptr<util::Image> m_wnd_ico;
+    WindowProcedure m_windowProcedure = {};
 };
 
 } // core
 // tri
 
-#endif //SCREEN_HPP
+#endif //SCREEN_H

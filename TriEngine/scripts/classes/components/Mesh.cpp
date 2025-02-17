@@ -59,7 +59,7 @@ namespace tri {
         glm::mat4 projection = glm::mat4(1.0f);
 
         view = glm::translate(view, glm::vec3(0.0f, 0.0f, 0.0f));
-        projection = glm::perspective(glm::radians(45.0f), core::Screen::main()->aspectRatio(), 0.1f, 100.0f);
+        projection = glm::perspective(glm::radians(45.0f), core::Screen::main->AspectRatio(), 0.1f, 100.0f);
         model = glm::translate(model, glm::vec3(0.0f, (sin(currentTime * float_speed) * float_distance) - 1.0f, -5.0f));
         model = glm::rotate(model, currentTime * glm::radians(rotate_speed), glm::vec3(0.5f, 0.5f, 0.5f));
 

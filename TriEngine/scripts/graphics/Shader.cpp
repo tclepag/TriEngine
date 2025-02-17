@@ -25,7 +25,7 @@ namespace tri::graphics {
     }
 
     void ShaderProgram::free() const {
-        this->~ShaderProgram();
+        delete this;
     }
 
 

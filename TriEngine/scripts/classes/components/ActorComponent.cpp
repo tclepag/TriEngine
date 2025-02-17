@@ -31,7 +31,7 @@ namespace tri {
 
     void ActorComponent::free() {
         std::cout << "Goodbye Component World!" << "FREE:" << name << std::endl;
-        ActorComponent::~ActorComponent();
+        delete this;
     }
 
 } // tri

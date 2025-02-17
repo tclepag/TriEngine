@@ -20,6 +20,7 @@ find_package(glfw3 REQUIRED)
 find_package(glad REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(Stb REQUIRED)
+find_package(imgui REQUIRED)
 
 add_executable(TriEngine main.cpp
         TriEngine/scripts/core/Screen.cpp
@@ -44,10 +45,11 @@ target_include_directories(TriEngine PUBLIC
 )
 
 target_link_libraries(TriEngine
-        OpenGL::GL
+        opengl32
         glfw
         glm::glm
         glad::glad
+        imgui::imgui
 )
 
 set_target_properties(TriEngine PROPERTIES
