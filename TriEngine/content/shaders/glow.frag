@@ -6,8 +6,8 @@ uniform float time;
 
 void main()
 {
-    float r = sin(time);
-    float g = sin(time + 2.0);
-    float b = sin(time + 4.0);
+    float r = sin(time * 2.0) * sin(time * 1.5);
+    float g = sin(time * 4.0) * sin(time * 1.5);
+    float b = sin(time * 5.0) * sin(time * 1.5);
     FragColor = vec4(r + ourColor.x, g + ourColor.y, b + ourColor.z, 1.0);
 }

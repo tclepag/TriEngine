@@ -4,8 +4,10 @@
 
 #include "Screen.hpp"
 
-namespace tri {
-namespace core {
+
+namespace tri::core {
+    Screen* Screen::mainScreen = nullptr;
+
     Screen::Screen(int width, int height, const char* title, const char* iconPath) {
         GLFWwindow* window = glfwCreateWindow(width, height, title, nullptr, nullptr);
         if (window == nullptr) {;
@@ -21,14 +23,24 @@ namespace core {
         glfwSwapInterval(0);
         glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+        if (mainScreen != nullptr) {
+            glfwDestroyWindow(window);
+            throw std::runtime_error("Failed to create main screen since one already exists");
+        }
+
         this->width = width;
         this->height = height;
+        mainScreen = this;
     }
 
     void Screen::render() {}
 
     GLFWwindow *Screen::wnd() {
         return this->m_wnd;
+    }
+
+    Screen *Screen::main() {
+        return mainScreen;
     }
 
 
@@ -108,4 +120,4 @@ namespace core {
     }
 
 } // core
-} // tri
+// tri

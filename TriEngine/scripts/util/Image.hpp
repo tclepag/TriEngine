@@ -9,30 +9,30 @@
 #include <iostream>
 #include <GLFW/glfw3.h>
 
-namespace tri {
-namespace util {
+
+namespace tri::util {
 
 class Image {
 public:
-    Image(const char* filePath);
+    explicit Image(const char* filePath);
     ~Image();
 
     // Returns the stb image pixels
-    unsigned char* pixels();
+    unsigned char* pixels() const;
     // Returns the GLFWimage
     GLFWimage* img();
     // Frees the image data
     void free();
     // Returns if the image was loaded
-    bool loaded();
+    bool loaded() const;
 private:
-    int width, height, channels;
+    int width{}, height{}, channels{};
     unsigned char* data;
-    GLFWimage image;
+    GLFWimage image{};
     bool LOADED = false;
 };
 
 } // util
-} // tri
+// tri
 
 #endif //IMAGE_HPP

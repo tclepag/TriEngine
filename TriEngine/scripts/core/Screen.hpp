@@ -14,15 +14,16 @@
 
 #include "../util/Image.hpp"
 
-namespace tri {
-namespace core {
 
-class Screen {
+namespace tri::core {
+
+class Screen final {
 public:
     int width, height;
 public:
-    Screen(int width = 800, int height = 600, const char* title = "TriWindow", const char* iconPath = "content/images/app.bmp");
-    ~Screen();
+    explicit Screen(int width = 800, int height = 600, const char* title = "TriWindow", const char* iconPath = "content/images/app.bmp");
+
+    virtual ~Screen();
 
     // Returns the GLFWwindow associated with this Screen
     GLFWwindow* wnd();
@@ -46,7 +47,7 @@ public:
     // Removes the window from current context if it ever was the context
     void unfocus() const;
     // Gets aspect ratio
-    float aspectRatio() const;
+    [[nodiscard]] float aspectRatio() const;
 
     // Closes
     void close() {
@@ -59,12 +60,15 @@ public:
         return s;
     }
     // Returns the current screen that is focused
-    Screen* currentContext();
+    static Screen* currentContext();
     // Returns the screen that uses this window
     static Screen* screenFromWindow(GLFWwindow *window);
     // Gets all subscreens
     std::vector<Screen*> subScreens();
+    // Returns the mainScreen
+    static Screen* main();
 private:
+    static Screen* mainScreen;
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 protected:
     GLFWwindow* m_wnd;
@@ -73,6 +77,6 @@ protected:
 };
 
 } // core
-} // tri
+// tri
 
 #endif //SCREEN_HPP

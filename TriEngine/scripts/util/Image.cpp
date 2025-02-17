@@ -6,8 +6,8 @@
 #include <stb_image.h>
 #include "Image.hpp"
 
-namespace tri {
-namespace util {
+
+namespace tri::util {
     Image::Image(const char *filePath) {
         unsigned char* pixels = stbi_load(filePath, &width, &height, &channels, STBI_rgb_alpha);
         if (pixels == nullptr) {
@@ -25,7 +25,7 @@ namespace util {
         LOADED = true;
     }
 
-    bool Image::loaded() {
+    bool Image::loaded() const {
         return this->LOADED;
     }
 
@@ -34,7 +34,7 @@ namespace util {
         return &this->image;
     }
 
-    unsigned char* Image::pixels() {
+    unsigned char* Image::pixels() const {
         return this->data;
     }
 
@@ -51,4 +51,4 @@ namespace util {
 
 
 } // util
-} // tri
+// tri
