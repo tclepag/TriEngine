@@ -2,9 +2,14 @@
 ### What is TriEngine?
 *"The prefix "tri-" means "three". It comes from both Greek and Latin words meaning "three". "Tri-" is often used with nouns and adjectives to indicate that something has three parts or elements."*
 
-TriEngine is a solo 3D game engine started as a hobby to learn how 3D engines work and how to develop them. 
+**TriEngine is a solo 3D game engine started as a hobby to learn how 3D engines work and how to develop them.**
 
-Currently TriEngine uses OpenGL, and Win32 Windows to power the engine
+TriEngine is currently using:
+* OpenGL
+* Glad
+* Win32 (for window management and creation)
+* glm (for transformations and other mathy stuff)
+* stb (for image loading)
 
 ## Why won't TriEngine be cross-platform?
 From my stand-point I believe that cross-platform is not very necessary in my case, I do not plan to develop for Mac since ***they deprecated OpenGL in favor of Metal, and I do not want to deal with 2 graphics apis***
