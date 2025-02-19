@@ -27,21 +27,21 @@ class ShaderProgram {
         // Sets the new file path for vertex shader and fragment
         bool context(const char* vertexPath = nullptr, const char* fragmentPath = nullptr);
         // Get uniform location
-        GLint uniform(const char* uniformName);
+        GLint uniform(const char* uniformName) const;
         // Sets uniform mat4
-        void uniformMat4(const char* uniformName, glm::mat4& matrix);
+        void uniformMat4(const char* uniformName, glm::mat4& matrix) const;
         // Sets uniform float
-        void uniformFloat(const char* uniformName, float value);
+        void uniformFloat(const char* uniformName, float value) const;
         // Sets uniform int
-        void uniformInt(const char* uniformName, int value);
+        void uniformInt(const char* uniformName, int value) const;
         // Set uniform vec2
-        void uniformVec2(const char *uniformName, float x, float y);
+        void uniformVec2(const char *uniformName, float x, float y) const;
         // Set uniform vec3
-        void uniformVec3(const char *uniformName, float x, float y, float z);
+        void uniformVec3(const char *uniformName, float x, float y, float z) const;
         // Set uniform vec4
-        void uniformVec4(const char *uniformName, float x, float y, float z, float w);
+        void uniformVec4(const char *uniformName, float x, float y, float z, float w) const;
         // Set uniform mat3
-        void uniformMat3(const char* uniformName, glm::mat3& matrix);
+        void uniformMat3(const char* uniformName, glm::mat3& matrix) const;
 
 
         // Links this shader's program

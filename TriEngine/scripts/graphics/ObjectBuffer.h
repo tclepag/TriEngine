@@ -8,12 +8,20 @@
 #include <vector>
 #include <glad/glad.h>
 
+#include "../buffers/VertexArrayObject.h"
+#include "../buffers/VertexBufferObject.h"
+#include "../buffers/ElementBufferObject.h"
+
+
 
 namespace tri::graphics {
 
 class ObjectBuffer {
     public:
-      GLuint VAO{}, VBO{}, EBO{};
+      buffers::VertexArrayObject* VAO{};
+      buffers::VertexBufferObject* VBO{};
+      buffers::ElementBufferObject* EBO{};
+
       std::vector<float> vertices;
       std::vector<int> indices;
 

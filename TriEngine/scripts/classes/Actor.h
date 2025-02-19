@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <glad/glad.h>
+#include "../core/Screen.h"
 
 #include "components/ActorComponent.h"
 
@@ -26,7 +27,7 @@ class Actor {
     virtual void init(); // When the actor loads into the world
     virtual void start(); // When the actor is fully loaded into the world
     virtual void update(); // When the world updates
-    virtual void draw(); // When the world is drawn
+    virtual void draw(core::Screen* from); // When the world is drawn
 
 
     void attachComponent(ActorComponent* component); // Add a component to this actor
@@ -35,7 +36,7 @@ private:
     void m_init();
     void m_start();
     void m_update();
-    void m_draw();
+    void m_draw(core::Screen* from) const;
 protected:
     std::vector<ActorComponent*> m_components;
 };

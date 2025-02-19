@@ -17,7 +17,7 @@ namespace tri {
         std::cout << "Hello Component World!" << "STARTED:" << name << std::endl;
     }
 
-    void ActorComponent::draw() {
+    void ActorComponent::draw(core::Screen* from) {
 
     }
 

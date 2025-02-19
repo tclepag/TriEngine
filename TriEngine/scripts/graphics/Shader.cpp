@@ -50,7 +50,7 @@ namespace tri::graphics {
 
         glGetProgramiv(id, GL_LINK_STATUS, &success);
         if (!success) {
-            glGetProgramInfoLog(id, 512, NULL, infoLog);
+            glGetProgramInfoLog(id, 512, nullptr, infoLog);
             std::cerr << "Error linking program" << std::endl;
             std::cerr << infoLog << std::endl;
         }
@@ -61,7 +61,7 @@ namespace tri::graphics {
         use();
     }
 
-    GLint ShaderProgram::uniform(const char *uniformName) {
+    GLint ShaderProgram::uniform(const char *uniformName) const {
         GLint location = glGetUniformLocation(id, uniformName);
         if (location == -1) {
             std::cerr << "Error getting uniform location." << "Using program ID" << id << std::endl;
@@ -71,31 +71,31 @@ namespace tri::graphics {
     }
 
 
-    void ShaderProgram::uniformFloat(const char *uniformName, float value) {
+    void ShaderProgram::uniformFloat(const char *uniformName, float value) const {
         glUniform1f(uniform(uniformName), value);
     }
 
-    void ShaderProgram::uniformInt(const char *uniformName, int value) {
+    void ShaderProgram::uniformInt(const char *uniformName, int value) const {
         glUniform1i(uniform(uniformName), value);
     }
 
-    void ShaderProgram::uniformVec2(const char *uniformName, const float x, const float y) {
+    void ShaderProgram::uniformVec2(const char *uniformName, const float x, const float y) const {
         glUniform2f(uniform(uniformName), x, y);
     }
 
-    void ShaderProgram::uniformVec3(const char *uniformName, const float x, const float y, const float z) {
+    void ShaderProgram::uniformVec3(const char *uniformName, const float x, const float y, const float z) const {
         glUniform3f(uniform(uniformName), x, y, z);
     }
 
-    void ShaderProgram::uniformVec4(const char *uniformName, const float x, const float y, const float z, const float w) {
+    void ShaderProgram::uniformVec4(const char *uniformName, const float x, const float y, const float z, const float w) const {
         glUniform4f(uniform(uniformName), x, y, z, w);
     }
 
-    void ShaderProgram::uniformMat4(const char *uniformName, glm::mat4 &matrix) {
+    void ShaderProgram::uniformMat4(const char *uniformName, glm::mat4 &matrix) const {
         glUniformMatrix4fv(uniform(uniformName), 1, GL_FALSE, glm::value_ptr(matrix));
     }
 
-    void ShaderProgram::uniformMat3(const char *uniformName, glm::mat3 &matrix) {
+    void ShaderProgram::uniformMat3(const char *uniformName, glm::mat3 &matrix) const {
         glUniformMatrix3fv(uniform(uniformName), 1, GL_FALSE, glm::value_ptr(matrix));
     }
 

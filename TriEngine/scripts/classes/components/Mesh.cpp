@@ -5,24 +5,18 @@
 #include "Mesh.h"
 
 // Vertices coordinates
-std::vector vertices =
-{ //     COORDINATES     /        COLORS      /   TexCoord  //
-    -0.5f, 0.0f,  0.5f,     0.5f, 0.0f, 0.0f,
-    -0.5f, 0.0f, -0.5f,     0.5f, 0.0f, 0.0f,
-     0.5f, 0.0f, -0.5f,     0.0f, 0.5f, 0.0f,
-     0.5f, 0.0f,  0.5f,     0.0f, 0.5f, 0.0f,
-     0.0f, 0.8f,  0.0f,     0.0f, 0.0f, 0.5f
+std::vector vertices = {
+    // positions          // colors           // texture coords
+    0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
+    0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+   -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+   -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left
 };
 
 // Indices for vertices order
-std::vector indices =
-{
+std::vector indices = {
     0, 1, 2,
-    0, 2, 3,
-    0, 1, 4,
-    1, 2, 4,
-    2, 3, 4,
-    3, 0, 4
+    2, 3, 0// One triangle formed by vertices 0, 1, and 2
 };
 
 namespace tri {
@@ -34,7 +28,7 @@ namespace tri {
 
         shaderProgram = new graphics::ShaderProgram(
        "content/shaders/default.vert",
-       "content/shaders/glow.frag"
+       "content/shaders/default.frag"
        );
     }
 
@@ -46,22 +40,30 @@ namespace tri {
 
     }
 
-    void Mesh::draw() {
+    void Mesh::addTexture(graphics::textures::Texture2D *texture) {
+        this->texture = texture;
+    }
+
+    void Mesh::draw(core::Screen* from) {
         shaderProgram->use();
 
-        float currentTime = glfwGetTime();
+        if (texture) {
+            texture->bind();
+        }
+
+        float currentTime = util::Time::GetElapsedTime();
         float rotate_speed = 150.0f;
         float float_speed = 1.0f;
         float float_distance = 0.2f;
 
-        glm::mat4 model = glm::mat4(1.0f);
-        glm::mat4 view = glm::mat4(1.0f);
-        glm::mat4 projection = glm::mat4(1.0f);
+        auto model = glm::mat4(1.0f);
+        auto view = glm::mat4(1.0f);
+        auto projection = glm::mat4(1.0f);
 
         view = glm::translate(view, glm::vec3(0.0f, 0.0f, 0.0f));
-        projection = glm::perspective(glm::radians(45.0f), core::Screen::main->AspectRatio(), 0.1f, 100.0f);
+        projection = glm::perspective(glm::radians(45.0f), from->aspectRatio(), 0.1f, 100.0f);
         model = glm::translate(model, glm::vec3(0.0f, (sin(currentTime * float_speed) * float_distance) - 1.0f, -5.0f));
-        model = glm::rotate(model, currentTime * glm::radians(rotate_speed), glm::vec3(0.5f, 0.5f, 0.5f));
+        //model = glm::rotate(model, currentTime * glm::radians(rotate_speed), glm::vec3(0.5f, 0.5f, 0.5f));
 
         float origin_scale = 2.0f;
         float size = 0.1;

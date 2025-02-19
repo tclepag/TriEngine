@@ -4,183 +4,213 @@
 
 #include "Screen.h"
 
-#include <iostream>
 
 
 namespace tri::core {
-    Screen* Screen::main = nullptr;
-    std::unordered_map<HGLRC, Screen*> Screen::m_screenContextList = {};
+    std::vector<std::string> Screen::classNames = {};
 
     LRESULT CALLBACK Screen::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-        if (auto* pThis = reinterpret_cast<Screen *>(GetWindowLongPtr(hWnd, GWLP_USERDATA))) {
-            pThis->m_windowProcedure = {
+        auto* pThis = reinterpret_cast<Screen *>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+        std::cout << message << std::endl;
+        if (pThis) {
+            pThis->windowProcedure = {
                 message,
                 wParam,
                 lParam,
             };
+
+            switch (message) {
+                case WM_DESTROY: {
+                    if (wglGetCurrentContext() == pThis->hrc) {
+                        wglMakeCurrent(nullptr, nullptr);
+                    }
+
+                    wglDeleteContext(pThis->hrc);
+                    pThis->hrc = nullptr;
+
+                    ReleaseDC(hWnd, pThis->hdc);
+                    pThis->hrc = nullptr;
+
+                    PostQuitMessage(0);
+                    delete pThis;
+                    return 0;
+                }
+                case WM_CLOSE: {
+                    if (!pThis->closePrompt || pThis->closePrompt()) {
+                        DestroyWindow(pThis->hWnd);
+                    }
+                    return 0;
+                }
+                case WM_NCHITTEST: {
+                    LRESULT hit = DefWindowProc(hWnd, message, wParam, lParam);
+                    if (hit == HTCLIENT) {
+                        // Let Windows handle resizing properly.
+                        return hit;
+                    }
+                    return hit;
+                }
+
+                default: {
+                    break;
+                }
+            }
         }
-        return 0;
+
+        return DefWindowProc(hWnd, message, wParam, lParam);
     }
 
-    Screen::Screen(ScreenInfo info): m_msg({}), m_pixelDescriptor({0}) {
-        m_wc = {0}; // Zero out the structure
-        m_hInstance = GetModuleHandle(nullptr);
+    void Screen::createWindowClass(WNDCLASSEX wndclass) {
+        wndclass.cbSize = sizeof(WNDCLASSEX);
+        wndclass.lpfnWndProc = WindowProc;
+        wndclass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 
-        const char* className = info.className.c_str();
-        const char* titleName = info.title.c_str();
-
-        m_wc.lpfnWndProc = WindowProc; // Window procedure function
-        m_wc.cbSize = sizeof(WNDCLASSEX);
-        m_wc.hInstance = m_hInstance; // Handle to the application instance
-        m_wc.lpszClassName = className; // Class name
-        m_wc.style = CS_HREDRAW | CS_VREDRAW; // Redraw on resizing
-
-        std::cout << "Registering class name: " << info.className << std::endl;
-        std::cout << "Instance handle: " << m_hInstance << std::endl;
-
-        std::cout << "Creating window with class: " << info.className << std::endl;
-        std::cout << "Title: " << info.title << std::endl;
-        std::cout << "Size: " << info.width << "x" << info.height << std::endl;
-        std::cout << "Style: " << m_wc.style << std::endl;
-
-
-
-        if (!RegisterClassEx(&m_wc)) {
-            MessageBox(nullptr, "Window class registration failed", "Error", MB_ICONERROR);
+        if (RegisterClassEx(&wndclass) == 0) {
             DWORD error = GetLastError();
-            std::cerr << "RegisterClassEx failed! Error: " << error << std::endl;
-            exit(-1);
+            std::cerr << "Failed to register window class: " << error << std::endl;
+            throw std::runtime_error("Failed to register window class");
         }
 
-        SetLastError(12345);
-        HWND hwnd = CreateWindowEx(
-    0,                              // Extended style
-    "GLFWWindowClass",              // Class name
-    "Debug Window",                 // Window title
-    WS_OVERLAPPEDWINDOW,            // Window style
-    CW_USEDEFAULT, CW_USEDEFAULT,   // Position
-    800, 600,                       // Size
-    nullptr, nullptr,                // Parent & menu
-    GetModuleHandle(nullptr),                      // Instance handle
-    nullptr                          // Additional params
-);
+        classNames.emplace_back(wndclass.lpszClassName);
+    }
 
 
-        if (!hwnd) {
-            std::cerr << "CreateWindowEx failed! Error: " << GetLastError() << std::endl;
-        }
-        std::cout << "DUMMY ERROR: " << GetLastError() << std::endl;
+    Screen::Screen(const ScreenInfo &info) {
+        msg = {};
+        hInstance = GetModuleHandle(nullptr);
 
-        if (m_hwnd == nullptr) {
-            DWORD error = GetLastError();
-            std::cerr << "Failed to create window! Error: " << error << std::endl;
+         hWnd = CreateWindowEx(
+            0,
+            info.className,
+            info.title,
+            WS_OVERLAPPEDWINDOW,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            info.width,
+            info.height,
+            info.parent,
+            nullptr,
+            hInstance,
+            nullptr
+        );
+
+        if (!hWnd) {
             throw std::runtime_error("Failed to create window");
         }
 
-        SetWindowLongPtr(m_hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
-        ShowWindow(m_hwnd, SW_SHOWNORMAL);
+        SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 
-        // Device Context
-        m_hdc = GetDC(m_hwnd);
-
-        // OpenGL Pixel Description
-        m_pixelDescriptor.nSize = sizeof(m_pixelDescriptor);
-        m_pixelDescriptor.nVersion = 1;
-        m_pixelDescriptor.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
-        m_pixelDescriptor.iPixelType = PFD_TYPE_RGBA;
-        m_pixelDescriptor.cColorBits = 32;
-        m_pixelDescriptor.cRedBits = 8;
-        m_pixelDescriptor.cGreenBits = 8;
-        m_pixelDescriptor.cBlueBits = 8;
-        m_pixelDescriptor.cAlphaBits = 8;
-
-        m_pixelFormat = ChoosePixelFormat(m_hdc, &m_pixelDescriptor);
-        SetPixelFormat(m_hdc, m_pixelFormat, &m_pixelDescriptor);
-
-        m_context = wglCreateContext(m_hdc);
-        wglMakeCurrent(m_hdc, m_context);
-
-        m_screenContextList[m_context] = this;
-
-        UpdateWindow(m_hwnd);
-        m_Info = std::move(info);
-    }
-
-    MSG Screen::GrabNewMessage() {
-        PeekMessage(&m_msg, nullptr, 0, 0, PM_REMOVE);
-        return m_msg;
-    }
-
-    MSG Screen::NoPeekMessage() const {
-        return m_msg;
-    }
-
-    void Screen::Swap() const {
-        SwapBuffers(m_hdc);
-    }
-
-    Screen::WindowProcedure Screen::GetWindowProc() const {
-        return m_windowProcedure;
-    }
-
-    Screen *Screen::createMainInstance(const ScreenInfo& info) {
-        if (main != nullptr) {
-            throw std::runtime_error("Screen::createMainInstance called more than once");
+        hdc = GetDC(hWnd);
+        if (!hdc) {
+            DWORD error = GetLastError();
+            std::cerr << "Failed to register hdc: " << error << std::endl;
+            throw std::runtime_error("Failed to get device context");
         }
 
-        auto* mainScreen = new Screen(info);
-        main = mainScreen;
-        return main;
-    }
+        PIXELFORMATDESCRIPTOR pfd = {};
+        pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+        pfd.nVersion = 1;
+        pfd.dwFlags = PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER | PFD_DRAW_TO_WINDOW;
+        pfd.iPixelType = PFD_TYPE_RGBA;
+        pfd.cColorBits = 32;
+        pfd.cRedBits = 8;
+        pfd.cGreenBits = 8;
+        pfd.cBlueBits = 8;
+        pfd.cAlphaBits = 8;
+        pfd.iLayerType = PFD_MAIN_PLANE;
 
-    Screen *Screen::createChildInstance(const ScreenInfo& info) {
-        auto* childScreen = new Screen(info);
-        m_children.push_back(childScreen);
-        return childScreen;
-    }
-
-    void Screen::Dispatch() const {
-        TranslateMessage(&m_msg);
-        DispatchMessage(&m_msg);
-    }
-
-    float Screen::AspectRatio() const {
-        return static_cast<float>(m_Info.width) / static_cast<float>(m_Info.height);
-    }
-
-    Screen::~Screen() {
-        for (const auto& child : m_children) {
-            child->Destroy();
+        int pixelFormat = ChoosePixelFormat(hdc, &pfd);
+        if (pixelFormat == 0)
+        {
+            MessageBox(nullptr, "Failed to choose pixel format", "Error", MB_OK | MB_ICONERROR);
+            throw std::runtime_error("Failed to choose pixel format");
         }
-        m_screenContextList[m_context] = nullptr;
 
-        wglDeleteContext(m_context);
-        ReleaseDC(m_hwnd, m_hdc);
-        UnregisterClass(m_wc.lpszClassName, m_hInstance);
+        if (!SetPixelFormat(hdc, pixelFormat, &pfd))
+        {
+            MessageBox(nullptr, "Failed to set pixel format", "Error", MB_OK | MB_ICONERROR);
+            throw std::runtime_error("Failed to set pixel format");
+        }
+
+        hrc = wglCreateContext(hdc);
+        if (!hrc) {
+            DWORD error = GetLastError();
+            std::cerr << "Failed to register hrc: " << error << std::endl;
+            throw std::runtime_error("Failed to create OpenGL context");
+        }
+
+        ShowWindow(hWnd, SW_SHOWNORMAL);
+        UpdateWindow(hWnd);
     }
 
-    void Screen::SetContextNew() const {
-        if (wglGetCurrentContext() != m_context) {
-            if (!wglMakeCurrent(m_hdc, m_context)) {
-                DWORD error = GetLastError();
-                std::cerr << "wglMakeCurrent failed! Error code: " << error << std::endl;
-                throw std::runtime_error("Failed to make context current");
-            }
-            wglMakeCurrent(m_hdc, m_context);
+    Screen::~Screen() = default;
+
+    void Screen::setStyle(Style style) {
+        switch (style) {
+            case Minimized:
+                ChangeDisplaySettings(nullptr, 0);
+                SetWindowLong(hWnd, GWL_STYLE, winStyle);
+                SetWindowPos(hWnd, HWND_TOP, rect.left, rect.top,
+                         rect.right - rect.left, rect.bottom - rect.top,
+                         SWP_NOZORDER | SWP_FRAMECHANGED);
+            case Fullscreen:
+                GetWindowRect(hWnd, &rect);
+                winStyle = GetWindowLong(hWnd, GWL_STYLE);
+                SetWindowLong(hWnd, GWL_STYLE, winStyle & ~WS_OVERLAPPEDWINDOW);
+                DEVMODE dm = {};
+                dm.dmSize = sizeof(dm);
+                dm.dmPelsWidth = 1920;
+                dm.dmPelsHeight = 1080;
+                dm.dmBitsPerPel = 32;
+                dm.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL;
+                ChangeDisplaySettings(&dm, CDS_FULLSCREEN);
+                SetWindowPos(hWnd, HWND_TOP, 0, 0, 1920, 1080, SWP_NOZORDER | SWP_FRAMECHANGED);
         }
     }
 
-    Screen *Screen::GetContextScreen() {
-        HGLRC currentContext = wglGetCurrentContext();
-        if (m_screenContextList.contains(currentContext)) {
-            return m_screenContextList[currentContext];
+    void Screen::makeCurrent() const {
+        if (wglGetCurrentContext() != hrc) {
+            wglMakeCurrent(hdc, hrc);
         }
-        return nullptr;
     }
 
-    void Screen::Destroy() const {
-        delete this;
+    bool Screen::shouldKill() const {
+        return msg.message == WM_DESTROY ||
+            msg.message == WM_QUIT;
     }
+
+    bool Screen::message() {
+        if (!IsWindow(hWnd)) {
+            msg.message = WM_QUIT;
+            return true;
+        }
+        return PeekMessage(&msg, hWnd, 0, 0, PM_REMOVE);
+    }
+
+    float Screen::aspectRatio() const {
+        RECT clientRect;
+        if (GetClientRect(hWnd, &clientRect)) {
+            int width = clientRect.right - clientRect.left;
+            int height = clientRect.bottom - clientRect.top;
+            return static_cast<float>(width) / static_cast<float>(height);
+        }
+        std::cerr << "Failed to get client rectangle." << std::endl;
+        return 1.0f;
+    }
+
+
+    int Screen::getMessage() {
+        if (!IsWindow(hWnd)) {
+            msg.message = WM_QUIT;
+            return 0;
+        }
+        return GetMessage(&msg, hWnd, 0, 0);
+    }
+
+    void Screen::dispatch() const {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
 
 } // core
 // tri

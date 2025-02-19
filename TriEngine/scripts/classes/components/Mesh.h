@@ -6,11 +6,11 @@
 #define MESH_HPP
 
 #include "ActorComponent.h"
-#include "../../core/Screen.h"
 #include "../../graphics/ObjectBuffer.h"
 #include "../../graphics/Shader.h"
+#include "../../util/Time.h"
+#include "../../graphics/textures/Texture2D.h"
 
-#include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -22,10 +22,12 @@ public:
     void init() override;
     void start() override;
     void update() override;
-    void draw() override;
+    void draw(core::Screen* from) override;
+    void addTexture(graphics::textures::Texture2D* texture);
 protected:
-    graphics::ObjectBuffer* buffer;
-    graphics::ShaderProgram* shaderProgram;
+    graphics::textures::Texture2D* texture;
+    graphics::ObjectBuffer*buffer = nullptr;
+    graphics::ShaderProgram*shaderProgram = nullptr;
 };
 
 } // tri

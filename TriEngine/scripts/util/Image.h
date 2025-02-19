@@ -7,28 +7,40 @@
 
 #include <stdexcept>
 #include <iostream>
-#include <GLFW/glfw3.h>
+
+#include <windows.h>
 
 
 namespace tri::util {
 
 class Image {
 public:
-    explicit Image(const char* filePath);
+    struct ImageData {
+        int width;
+        int height;
+        int channels;
+        unsigned char* data;
+    };
+    enum ImageType {
+        WINDOWS,
+        STB
+    };
+    explicit Image(const char* filePath, ImageType type);
     ~Image();
 
-    // Returns the stb image pixels
-    unsigned char* pixels() const;
-    // Returns the GLFWimage
-    GLFWimage* img();
+    // Returns the HBITMAP
+    HBITMAP* img();
+    // Returns the pixel data
+    [[nodiscard]] ImageData getData() const;
     // Frees the image data
     void free();
     // Returns if the image was loaded
-    bool loaded() const;
+    [[nodiscard]] bool loaded() const;
 private:
     int width{}, height{}, channels{};
-    unsigned char* data;
-    GLFWimage image{};
+    HBITMAP image{};
+    unsigned char* pixels{};
+    ImageType img_type;
     bool LOADED = false;
 };
 

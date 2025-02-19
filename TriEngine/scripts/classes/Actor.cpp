@@ -16,7 +16,7 @@ namespace tri {
         }
     }
 
-    void Actor::draw() {  m_draw(); }
+    void Actor::draw(core::Screen* from) {  m_draw(from); }
     void Actor::update() {  m_update(); }
     void Actor::init() {  m_init(); }
     void Actor::start() {  m_start(); }
@@ -35,9 +35,9 @@ namespace tri {
         }
     }
 
-    void Actor::m_draw() {
+    void Actor::m_draw(core::Screen* from) const {
         for (auto& component : m_components) {
-            component->draw();
+            component->draw(from);
         }
     }
 

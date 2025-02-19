@@ -8,6 +8,8 @@
 #include <iostream>
 #include <typeinfo>
 
+#include "../../core/Screen.h"
+
 namespace tri {
     class Actor;
 class ActorComponent {
@@ -22,7 +24,7 @@ public:
     virtual void init(); // When the component loads
     virtual void start(); // When the component loads and is ready
     virtual void update(); // Updates during runtime
-    virtual void draw();
+    virtual void draw(core::Screen* from);
     virtual void editor_update(); // Updates in the editor
 
     void free();

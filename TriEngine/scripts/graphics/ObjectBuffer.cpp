@@ -18,60 +18,44 @@ namespace tri::graphics {
     }
 
     void ObjectBuffer::rebuild() {
-        if (VAO != 0) {
-            glDeleteVertexArrays(1, &VAO);
-        }
-        if (VBO != 0) {
-            glDeleteBuffers(1, &VBO);
-        }
-        if (EBO != 0) {
-            glDeleteBuffers(1, &EBO);
-        }
-        glGenBuffers(1, &EBO); // Create Element Buffer Object
-        glGenVertexArrays(1, &VAO); // Create Vertex Array Object
-        glGenBuffers(1, &VBO); // Create Vertex Buffer Object
+        delete VAO;
+        delete VBO;
+        delete EBO;
 
-        glBindVertexArray(VAO); // Bind the Vertex Array Object
+        VAO = new buffers::VertexArrayObject();
+        VBO = new buffers::VertexBufferObject();
+        EBO = new buffers::ElementBufferObject();
 
+        VAO->bind();
 
-        // Bind Vertex Buffer Object and transfer vertex data to the Vertex Array Object
-        auto vsize = static_cast<GLsizeiptr>(vertices.size() * sizeof(float));
+        VBO->bind();
+        VBO->upload(vertices, GL_DYNAMIC_DRAW);
 
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, vsize, vertices.data(), GL_STATIC_DRAW);
+        EBO->bind();
+        EBO->upload(indices, GL_DYNAMIC_DRAW);
+        // Position Attribute (Index 0)
+        VAO->attribute(0, 3, 8, 0); // 3 floats at offset 0
+        VAO->enableAttribute(0);
 
-        // Bind Element Buffer Object and load our indices.
-        // Helpful since instead of specifying vertice position,
-        // we use ints and OpenGL just gets the vertex position by finding it with the index
-        // Like: vertices[index]
-        auto isize = static_cast<GLsizeiptr>(indices.size() * sizeof(int));
+        // Color Attribute (Index 1)
+        VAO->attribute(1, 3, 8, 3); // 3 floats at offset 3
+        VAO->enableAttribute(1);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, isize, indices.data(), GL_STATIC_DRAW);
+        // Texture Coordinate Attribute (Index 2)
+        VAO->attribute(2, 2, 8, 6); // 2 floats at offset 6 (not 3!)
+        VAO->enableAttribute(2);
 
-        // Position attributes
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0);
-
-        // Color Attribute
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-        glEnableVertexAttribArray(1);
-
-        // Texture Coordinate Attribute
-        //glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-        //glEnableVertexAttribArray(2);
-
-        // Unbind Vertex Buffer Object and Vertex Array Object
         // Good practice to unbind after creation
-        glBindVertexArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        VAO->unbind();
+        VBO->unbind();
+        EBO->unbind();
     }
 
     void ObjectBuffer::use() const {
         auto isize = static_cast<GLsizei>(indices.size() * sizeof(int));
-        glBindVertexArray(VAO);
+        VAO->bind();
         glDrawElements(GL_TRIANGLES, isize/sizeof(int), GL_UNSIGNED_INT, nullptr);  // Use indices to draw
-        glBindVertexArray(0);
+        VAO->unbind();
     }
 
 
