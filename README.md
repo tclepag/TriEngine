@@ -1,5 +1,4 @@
 # TriEngine ![app](https://github.com/user-attachments/assets/fc03e2c1-c84f-4f5e-96da-6bb82006205e)
-### What is TriEngine?
 *"The prefix "tri-" means "three". It comes from both Greek and Latin words meaning "three". "Tri-" is often used with nouns and adjectives to indicate that something has three parts or elements."*
 
 **TriEngine is a solo 3D game engine started as a hobby to learn how 3D engines work and how to develop them.**
