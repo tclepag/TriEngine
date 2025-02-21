@@ -28,14 +28,20 @@ add_executable(TriEngine main.cpp
         TriEngine/engine/buffers/ElementBufferObject.h
         TriEngine/engine/buffers/FrameBufferObject.h
         TriEngine/engine/core/Window.cpp
-        TriEngine/engine/core/Window.h)
+        TriEngine/engine/core/Window.h
+        TriEngine/engine/utility/Image.cpp
+        TriEngine/engine/utility/Image.h
+        TriEngine/engine/ecs/systems/Rendering.cpp
+        TriEngine/engine/ecs/systems/Rendering.h
+        TriEngine/engine/ecs/components/ChildrenManager.cpp
+        TriEngine/engine/ecs/components/ChildrenManager.h)
 
 target_include_directories(TriEngine PUBLIC
         ${Stb_INCLUDE_DIR}
 )
 
 target_link_libraries(TriEngine
-        OpenGL::OpenGL
+        OpenGL::GL
         glm::glm
         glad::glad
         imgui::imgui
