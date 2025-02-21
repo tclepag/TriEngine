@@ -9,12 +9,6 @@
 
 namespace tri::ecs::components {
     template<class OwnerBase, class ChildBase>
-    ChildrenManager<OwnerBase, ChildBase>::ChildrenManager(bool childExistOnlyInManager) {
-        m_deleteChildAfterRemoval = childExistOnlyInManager;
-        m_children = {};
-    }
-
-    template<class OwnerBase, class ChildBase>
     ChildrenManager<OwnerBase, ChildBase>::~ChildrenManager() {
         removeAllChildren();
     }
@@ -91,6 +85,12 @@ namespace tri::ecs::components {
     int ChildrenManager<OwnerBase, ChildBase>::getChildCount() {
         return m_children.size();
     }
+
+    template<class OwnerBase, class ChildBase>
+    void ChildrenManager<OwnerBase, ChildBase>::free() const {
+        delete this;
+    }
+
 } // components
 // ecs
 // tri

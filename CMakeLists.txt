@@ -16,6 +16,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${OUTPUT_DIR}")
 set(CMAKE_CXX_STANDARD 20)
 
 find_package(OpenGL REQUIRED)
+find_package(Lua REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(glad REQUIRED)
 find_package(glm CONFIG REQUIRED)
@@ -34,10 +35,17 @@ add_executable(TriEngine main.cpp
         TriEngine/engine/ecs/systems/Rendering.cpp
         TriEngine/engine/ecs/systems/Rendering.h
         TriEngine/engine/ecs/components/ChildrenManager.cpp
-        TriEngine/engine/ecs/components/ChildrenManager.h)
+        TriEngine/engine/ecs/components/ChildrenManager.h
+        TriEngine/engine/ecs/entities/AActorBase.cpp
+        TriEngine/engine/ecs/entities/AActorBase.h
+        TriEngine/engine/lua/ALuaScript.cpp
+        TriEngine/engine/lua/ALuaScript.h
+        TriEngine/engine/lua/ALuaEnvironment.cpp
+        TriEngine/engine/lua/ALuaEnvironment.h)
 
 target_include_directories(TriEngine PUBLIC
         ${Stb_INCLUDE_DIR}
+        ${LUA_INCLUDE_DIR}
 )
 
 target_link_libraries(TriEngine
@@ -46,4 +54,6 @@ target_link_libraries(TriEngine
         glad::glad
         imgui::imgui
         glfw
+
+        ${LUA_LIBRARIES}
 )

@@ -5,6 +5,7 @@
 #ifndef CHILDRENMANAGER_H
 #define CHILDRENMANAGER_H
 #include <functional>
+
 #include <memory>
 #include <string>
 
@@ -22,7 +23,9 @@ namespace tri::ecs::components {
             ANCESTOR
         };
 
-        explicit ChildrenManager(bool childExistOnlyInManager = false);
+        explicit ChildrenManager(bool childExistOnlyInManager = false) {
+            m_deleteChildAfterRemoval = childExistOnlyInManager;
+        }
         ~ChildrenManager();
 
         ChildBase *addChild(ChildBase *child);
@@ -35,7 +38,7 @@ namespace tri::ecs::components {
         RawActors getChildren(TraverseType traverse_type = CHILDREN);
         int getChildCount();
 
-        void free();
+        void free() const;
     private:
         bool m_deleteChildAfterRemoval = false;
         bool m_destroying = false;
