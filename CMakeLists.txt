@@ -41,7 +41,8 @@ add_executable(TriEngine main.cpp
         TriEngine/engine/lua/ALuaScript.cpp
         TriEngine/engine/lua/ALuaScript.h
         TriEngine/engine/lua/ALuaEnvironment.cpp
-        TriEngine/engine/lua/ALuaEnvironment.h)
+        TriEngine/engine/lua/ALuaEnvironment.h
+)
 
 target_include_directories(TriEngine PUBLIC
         ${Stb_INCLUDE_DIR}
