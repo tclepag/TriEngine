@@ -40,7 +40,6 @@ namespace tri::utility
 
     Image::~Image() {
         stbi_image_free(m_image);
-        delete m_image;
     }
 
     GLFWimage * Image::GetGLFWimage() const {

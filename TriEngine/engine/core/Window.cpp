@@ -16,7 +16,7 @@ namespace tri::core {
             height,
             title.c_str(),
             nullptr,
-            parent->p_window
+            parent ? parent->p_window : nullptr
             );
         p_parent = parent;
 

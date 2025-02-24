@@ -16,7 +16,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${OUTPUT_DIR}")
 set(CMAKE_CXX_STANDARD 20)
 
 find_package(OpenGL REQUIRED)
-find_package(Lua REQUIRED)
+find_package(Lua CONFIG REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(glad REQUIRED)
 find_package(glm CONFIG REQUIRED)
@@ -32,17 +32,20 @@ add_executable(TriEngine main.cpp
         TriEngine/engine/core/Window.h
         TriEngine/engine/utility/Image.cpp
         TriEngine/engine/utility/Image.h
-        TriEngine/engine/ecs/systems/Rendering.cpp
-        TriEngine/engine/ecs/systems/Rendering.h
-        TriEngine/engine/ecs/entities/AActorBase.cpp
-        TriEngine/engine/ecs/entities/AActorBase.h
         TriEngine/engine/lua/ALuaManager.cpp
         TriEngine/engine/lua/ALuaManager.h
         TriEngine/engine/lua/ALuaState.cpp
         TriEngine/engine/lua/ALuaState.h
+        TriEngine/engine/lua/types/ALuaClass.h
+        TriEngine/engine/lua/ALuaEnvComm.cpp
+        TriEngine/engine/lua/ALuaEnvComm.h
+        TriEngine/engine/lua/ALuaSignal.cpp
+        TriEngine/engine/lua/ALuaSignal.h
+        TriEngine/engine/lua/types/ALuaBool.h
+        TriEngine/engine/lua/types/ALuaNumber.h
+        TriEngine/engine/lua/types/ALuaInteger.h
+        TriEngine/engine/lua/types/ALuaTable.h
 )
-
-include_directories(${LUA_INCLUDE_DIR})
 
 target_include_directories(TriEngine PUBLIC
         ${Stb_INCLUDE_DIR}
@@ -54,5 +57,5 @@ target_link_libraries(TriEngine
         glad::glad
         imgui::imgui
         glfw
-        lua
+        sol2
 )
