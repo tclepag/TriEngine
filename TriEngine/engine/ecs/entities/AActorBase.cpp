@@ -7,11 +7,11 @@
 
 
 namespace tri::ecs::entities {
-    AActorBase::AActorBase(lua::ALuaEnvironment* lua_environment): Id(0), bLuaEnv(lua_environment) {
-        Children = new components::ChildrenManager<AActorBase, AActorBase>(false);
+    AActorBase::AActorBase() {
     }
 
     AActorBase::~AActorBase() {
+
     }
 
     void AActorBase::Init() {
@@ -26,20 +26,31 @@ namespace tri::ecs::entities {
     void AActorBase::Free() {
     }
 
-    AActorBase *AActorBase::LuaNew(lua::ALuaEnvironment *lua_environment) {
-
+    int AActorBase::LuaCreate(lua_State *L) {
+        return 1;
     }
 
-    luaL_Reg AActorBase::LuaMethods() {
-
+    int AActorBase::LuaInit(lua_State* L) {
+        return 1;
     }
 
-    luaL_Reg AActorBase::LuaMeta() {
-        return {
-            {"__index", }
-        };
+    int AActorBase::LuaUpdate(lua_State* L) {
+        return 1;
     }
 
+    int AActorBase::LuaRender(lua_State* L) {
+        return 1;
+    }
+
+    int AActorBase::LuaFree(lua_State* L) {
+        return 1;
+    }
+
+    void AActorBase::RegisterLua(const std::function<void(lua::ALuaState::LuaClass LuaClass)>&) {
+        lua::ALuaState::LuaClass LuaClass("AActorBase");
+        LuaClass.Constructor = LuaInit;
+        LuaClass.Destructor = LuaFree;
+    }
 } // entities
 // ecs
 // tri

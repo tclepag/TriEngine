@@ -5,19 +5,21 @@
 #ifndef ACTOR_H
 #define ACTOR_H
 
-#include "../components/ChildrenManager.h"
+#include <string>
+
+#include "../../lua/ALuaManager.h"
 
 namespace tri::ecs::entities {
 
 class AActorBase {
 public:
-    components::ChildrenManager<AActorBase, AActorBase> *Children;
+
     std::string Name;
     unsigned int Id;
 
     bool bVisibleInInspector = true;
 
-    AActorBase(lua::ALuaEnvironment* lua_environment);
+    AActorBase();
     ~AActorBase();
 
     void Init();
@@ -25,14 +27,13 @@ public:
     void Render();
     void Free();
 
-    void LuaInit();
-    void LuaUpdate();
-    void LuaRender();
-    void LuaFree();
+    static int LuaCreate(lua_State *L);
+    static int LuaInit(lua_State* L);
+    static int LuaUpdate(lua_State* L);
+    static int LuaRender(lua_State* L);
+    static int LuaFree(lua_State* L);
 
-    static AActorBase* LuaNew(lua::ALuaEnvironment *lua_environment);
-protected:
-    lua::ALuaEnvironment *bLuaEnv;
+    static void RegisterLua(const std::function<void(lua::ALuaState::LuaClass LuaClass)>&);
 };
 
 } // entities
