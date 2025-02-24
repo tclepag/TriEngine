@@ -115,13 +115,12 @@ namespace tri::lua {
     }
 
     void ALuaState::LuaFile(const char *filePath) const {
-        int result = luaL_loadfile(L, filePath);
+        int result = luaL_dofile(L, filePath);
         if (result != 0) {
             std::cerr << "ERROR RUNNING LUA FILE AT [" << filePath << "]" << std::endl;
             std::cerr << "LUA ERROR: " << lua_tostring(L, -1) << std::endl;
         }
     }
-
 
     template<class Class>
     void ALuaState::RegisterClass() {

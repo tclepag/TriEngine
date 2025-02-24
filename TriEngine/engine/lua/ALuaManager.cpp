@@ -79,5 +79,11 @@ namespace tri::lua {
         }
     }
 
+    void ALuaManager::CallAll(const std::function<void(ALuaState* LuaState)>& Callback) {
+        for (auto State: LuaStates) {
+            Callback(State);
+        }
+    }
+
 } // lua
 // tri

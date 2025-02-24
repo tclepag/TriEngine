@@ -31,11 +31,14 @@ int main() {
     });
 
     // Establish Globals
-    luaManager->Call({"Core", "Development", "Game"}, [luaManager](const tri::lua::ALuaState* state) {
+    luaManager->CallAll([luaManager](const tri::lua::ALuaState* state) {
         state->Push(greet);
         state->SetGlobal("HELLO_WORLD");
+    });
 
-        state->LuaFile("lua/Test.lua");
+    // Load all scripts now
+    luaManager->CallAll([](const tri::lua::ALuaState* state) {
+       state->LuaFile("lua/Test.lua");
     });
 
     for (auto State: luaManager->GetStates()) {

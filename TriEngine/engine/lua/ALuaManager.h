@@ -40,6 +40,9 @@ public:
     // Sends Lua States to the Callback
     // Usually used to help sync multiple Lua States
     void Call(const States& States, const std::function<void(ALuaState* LuaState)>& Callback);
+    // Sends Lua States to the Callback
+    // Usually used to help sync multiple Lua States
+    void CallAll(const std::function<void(ALuaState* LuaState)>& Callback);
 private:
     std::vector<ALuaState*> LuaStates{};
 
