@@ -12,7 +12,7 @@ void error_callback(int error, const char* description) {
 }
 
 int greet(lua_State* L) {
-    std::cout << "Hello, World!" << std::endl;
+    std::cout << "Hello World, from Lua!" << std::endl;
     return 0;
 }
 

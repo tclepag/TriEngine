@@ -1,5 +1,5 @@
 //
-// Created by lepag on 2/21/2025.
+// Created by TC on 2/21/2025.
 //
 
 #include "Rendering.h"
