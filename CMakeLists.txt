@@ -47,6 +47,12 @@ add_executable(TriEngine main.cpp
         TriEngine/engine/lua/types/ALuaTable.h
         TriEngine/engine/lua/types/ALuaString.h
         TriEngine/engine/lua/types/ALuaFunction.h
+        TriEngine/engine/core/GameManager.cpp
+        TriEngine/engine/core/GameManager.h
+        TriEngine/engine/py/APyManager.cpp
+        TriEngine/engine/py/APyManager.h
+        TriEngine/engine/py/APyInterp.cpp
+        TriEngine/engine/py/APyInterp.h
 )
 
 target_include_directories(TriEngine PUBLIC
