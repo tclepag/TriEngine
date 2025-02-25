@@ -4,7 +4,7 @@
 
 #include "GameManager.h"
 
-namespace tri {
-namespace core {
+
+namespace tri::core {
 } // core
-} // tri
+// tri

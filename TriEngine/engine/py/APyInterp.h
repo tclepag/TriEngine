@@ -5,10 +5,14 @@
 #ifndef APYINTERP_H
 #define APYINTERP_H
 
+#include <Python.h>
 
 namespace tri::py {
 
 class APyInterp {
+    public:
+      APyInterp();
+      ~APyInterp();
 
 };
 

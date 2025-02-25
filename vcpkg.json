@@ -27,7 +27,7 @@
     "name" : "glfw3",
     "version>=" : "3.4#1"
   }, {
-    "name" : "sol2",
-    "version>=" : "3.3.1"
+    "name" : "pybind11",
+    "version>=" : "2.13.6"
   } ]
 }

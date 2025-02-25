@@ -16,7 +16,8 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${OUTPUT_DIR}")
 set(CMAKE_CXX_STANDARD 20)
 
 find_package(OpenGL REQUIRED)
-find_package(sol2 CONFIG REQUIRED)
+find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+find_package(pybind11 CONFIG REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(glad REQUIRED)
 find_package(glm CONFIG REQUIRED)
@@ -32,31 +33,21 @@ add_executable(TriEngine main.cpp
         TriEngine/engine/core/Window.h
         TriEngine/engine/utility/Image.cpp
         TriEngine/engine/utility/Image.h
-        TriEngine/engine/lua/ALuaManager.cpp
-        TriEngine/engine/lua/ALuaManager.h
-        TriEngine/engine/lua/ALuaState.cpp
-        TriEngine/engine/lua/ALuaState.h
-        TriEngine/engine/lua/types/ALuaClass.h
-        TriEngine/engine/lua/ALuaEnvComm.cpp
-        TriEngine/engine/lua/ALuaEnvComm.h
-        TriEngine/engine/lua/ALuaSignal.cpp
-        TriEngine/engine/lua/ALuaSignal.h
-        TriEngine/engine/lua/types/ALuaBool.h
-        TriEngine/engine/lua/types/ALuaNumber.h
-        TriEngine/engine/lua/types/ALuaInteger.h
-        TriEngine/engine/lua/types/ALuaTable.h
-        TriEngine/engine/lua/types/ALuaString.h
-        TriEngine/engine/lua/types/ALuaFunction.h
         TriEngine/engine/core/GameManager.cpp
         TriEngine/engine/core/GameManager.h
         TriEngine/engine/py/APyManager.cpp
         TriEngine/engine/py/APyManager.h
         TriEngine/engine/py/APyInterp.cpp
         TriEngine/engine/py/APyInterp.h
+        TriEngine/engine/core/Engine.cpp
+        TriEngine/engine/core/Engine.h
+        TriEngine/engine/core/PyCore.cpp
+        TriEngine/engine/core/PyCore.h
 )
 
 target_include_directories(TriEngine PUBLIC
         ${Stb_INCLUDE_DIR}
+        ${PYTHON_INCLUDE_DIRS}
 )
 
 target_link_libraries(TriEngine
@@ -65,5 +56,6 @@ target_link_libraries(TriEngine
         glad::glad
         imgui::imgui
         glfw
-        sol2
+        pybind11::module
+        ${PYTHON_LIBRARIES}
 )

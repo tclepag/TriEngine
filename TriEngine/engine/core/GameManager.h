@@ -5,14 +5,14 @@
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
-namespace tri {
-namespace core {
+
+namespace tri::core {
 
 class GameManager {
 
 };
 
 } // core
-} // tri
+// tri
 
 #endif //GAMEMANAGER_H
