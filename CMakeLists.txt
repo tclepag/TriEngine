@@ -16,7 +16,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${OUTPUT_DIR}")
 set(CMAKE_CXX_STANDARD 20)
 
 find_package(OpenGL REQUIRED)
-find_package(Lua CONFIG REQUIRED)
+find_package(sol2 CONFIG REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(glad REQUIRED)
 find_package(glm CONFIG REQUIRED)
@@ -45,6 +45,8 @@ add_executable(TriEngine main.cpp
         TriEngine/engine/lua/types/ALuaNumber.h
         TriEngine/engine/lua/types/ALuaInteger.h
         TriEngine/engine/lua/types/ALuaTable.h
+        TriEngine/engine/lua/types/ALuaString.h
+        TriEngine/engine/lua/types/ALuaFunction.h
 )
 
 target_include_directories(TriEngine PUBLIC

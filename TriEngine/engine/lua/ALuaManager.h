@@ -7,22 +7,23 @@
 #include <memory>
 #include <vector>
 
-extern "C" {
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
-}
-
-#include "ALuaState.h"
+#include <sol/sol.hpp>
 
 
 namespace tri::lua {
     class ALuaManager {
     public:
-        using LuaObject = std::shared_ptr<ALuaState>;
-        using LuaRegistry = std::vector<LuaObject>;
+        using LuaObject = std::shared_ptr<sol::state>;
+        using LuaRegistry = std::unordered_map<const char*, LuaObject>;
+        using LuaCallback = std::function<void(LuaObject LuaObject)>;
 
-        LuaObject CreateLuaEnvironment(const char* EnvName);
+        static ALuaManager& Instance();
+
+        ALuaManager(const ALuaManager&) = delete;
+        ALuaManager& operator=(const ALuaManager&) = delete;
+
+        LuaObject CreateLuaEnvironment(const char* EnvName, const LuaCallback& Callback);
+        void RunAllEnvironments(const LuaCallback& Callback);
     private:
         ALuaManager();
         ~ALuaManager();
