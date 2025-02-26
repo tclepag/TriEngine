@@ -5,7 +5,13 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+#include <glad/glad.h>
+
+#include "Engine.h"
+#include "PyCore.h"
 #include "Window.h"
+#include "../common/EventDispatcher.h"
+#include "../py/APyManager.h"
 
 namespace tri::core {
 
@@ -21,6 +27,9 @@ public:
         return Instance;
     }
 
+    common::EventDispatcher<int> *onStart;
+    common::EventDispatcher<int> *onQuit;
+
     void Start();
     void Update();
     void Render();
@@ -31,6 +40,8 @@ private:
 
     Windows windows;
     Window* mainWindow;
+    APyManager* pyManager;
+    PyCore* pyCore;
 
     Engine();
     ~Engine();

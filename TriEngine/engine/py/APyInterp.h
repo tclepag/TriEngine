@@ -6,16 +6,19 @@
 #define APYINTERP_H
 
 #include <Python.h>
+#include <string>
 
 namespace tri::py {
-
-class APyInterp {
+    class APyInterp {
     public:
-      APyInterp();
-      ~APyInterp();
+        APyInterp();
+        ~APyInterp();
 
-};
+        void Py(const std::string &scriptPath) const;
 
+    private:
+        PyThreadState *state;
+    };
 } // py
 // tri
 

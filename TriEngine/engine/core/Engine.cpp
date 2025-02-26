@@ -6,17 +6,29 @@
 
 #include <iostream>
 #include <ostream>
-#include <glad/glad.h>
 
 namespace tri::core {
+    Engine* Engine::engine = nullptr;
+
     Engine::Engine() {
         glfwInit();
+
+        onStart = new common::EventDispatcher<int>();
+        onQuit = new common::EventDispatcher<int>();
+
+        pyCore = PyCore::GetCore();
+        pyCore->Start();
+
+        pyManager = &APyManager::GetManager();
     }
 
     Engine::~Engine() {
         std::cout << "ENGINE CLOSING" << std::endl;
-    }
 
+        pyCore->Stop();
+        pyManager->Free();
+        mainWindow->terminate();
+    }
     
     void Engine::Start() {
         auto* MainWindow = new Window(nullptr, 800, 600, "TriEngine");
@@ -26,6 +38,8 @@ namespace tri::core {
             std::cout << "Failed to initialize GLAD" << std::endl;
             return;
         }
+
+        onStart->out(1);
 
         while (running) {
             glfwPollEvents();
@@ -48,7 +62,7 @@ namespace tri::core {
     }
 
     void Engine::Close() {
-
+        onQuit->out(1);
     }
 } // core
 // tri

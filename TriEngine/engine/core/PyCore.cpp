@@ -6,9 +6,26 @@
 
 
 namespace tri::core {
-    PyCore::PyCore() {
+    PyCore* PyCore::Instance = nullptr;
 
+    PyCore::PyCore() = default;
+
+    void PyCore::Start() {
+        if (!Py_IsInitialized()) {
+            Py_Initialize();
+        }
     }
+
+    void PyCore::Stop() const {
+        delete this;
+    }
+
+    PyCore::~PyCore() {
+        if (Py_IsInitialized()) {
+            Py_Finalize();
+        }
+    }
+
 
 } // core
 // tri
