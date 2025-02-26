@@ -43,6 +43,7 @@ add_executable(TriEngine main.cpp
         TriEngine/engine/core/Engine.h
         TriEngine/engine/core/PyCore.cpp
         TriEngine/engine/core/PyCore.h
+        TriEngine/engine/common/Delegate.h
 )
 
 target_include_directories(TriEngine PUBLIC
