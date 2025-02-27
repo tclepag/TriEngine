@@ -6,7 +6,7 @@
 
 
 namespace tri::py {
-    APyInterp::APyInterp() {
+    APyInterp::APyInterp(APyManager& manager): manager(manager) {
         state = Py_NewInterpreter();
         if (state == nullptr) {
             PyErr_SetString(PyExc_RuntimeError, "Failed to create interpreter");

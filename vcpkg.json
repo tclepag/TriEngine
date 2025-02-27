@@ -32,5 +32,11 @@
   }, {
     "name" : "python3",
     "version>=" : "3.11.11"
+  }, {
+    "name" : "vcpkg-get-python",
+    "version>=" : "2025-02-09"
+  }, {
+    "name" : "vcpkg-get-python-packages",
+    "version>=" : "2024-09-29"
   } ]
 }

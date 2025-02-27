@@ -16,7 +16,8 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${OUTPUT_DIR}")
 set(CMAKE_CXX_STANDARD 20)
 
 find_package(OpenGL REQUIRED)
-find_package(Python REQUIRED COMPONENTS Interpreter Development)
+find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+
 find_package(pybind11 CONFIG REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(glad REQUIRED)
@@ -48,11 +49,13 @@ add_executable(TriEngine main.cpp
         TriEngine/engine/ecs/systems/Renderer.h
         TriEngine/engine/ecs/components/ChildrenComponent.cpp
         TriEngine/engine/ecs/components/ChildrenComponent.h
+        TriEngine/engine/ecs/components/IComponent.h
+        TriEngine/engine/ecs/entities/IActor.h
 )
 
 target_include_directories(TriEngine PUBLIC
         ${Stb_INCLUDE_DIR}
-        ${Python_INCLUDE_DIRS}
+        ${Python3_INCLUDE_DIRS}
 )
 
 target_link_libraries(TriEngine
@@ -62,5 +65,5 @@ target_link_libraries(TriEngine
         imgui::imgui
         glfw
         pybind11::module
-        ${Python_LIBRARIES}
+        ${Python3_LIBRARIES}
 )

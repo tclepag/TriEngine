@@ -11,18 +11,18 @@ namespace tri::py {
     APyManager* APyManager::Instance = nullptr;
 
     APyInterp* APyManager::CreateInterpreter(const char *Name) {
-        Interpreter Interp = std::make_shared<APyInterp>();
-        Intrepreters[Name] = Interp;
+        const Interpreter Interp = std::make_shared<APyInterp>(*this);
+        Interpreters[Name] = Interp;
         auto casted = dynamic_cast<APyInterp*>(Interp.get());
         return casted;
     }
 
-    void APyManager::DestroyInterpreter(Interpreter *Interpreter) {
-        Interpreter->reset();
+    void APyManager::DestroyInterpreter(Interpreter Interpreter) {
+        Interpreter.reset();
     }
 
-    APyManager::Interpreter & APyManager::operator[](const char *Name) {
-        return Intrepreters[Name];
+    APyManager::Interpreter APyManager::operator[](const char *Name) {
+        return Interpreters[Name];
     }
 
     APyManager::APyManager() {
@@ -32,8 +32,8 @@ namespace tri::py {
     }
 
     APyManager::~APyManager() {
-        for (auto [first, second]: Intrepreters) {
-            DestroyInterpreter(&second);
+        for (auto [first, second]: Interpreters) {
+            DestroyInterpreter(second);
         }
     }
 }

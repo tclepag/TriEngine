@@ -5,6 +5,9 @@
 #ifndef APYMANAGER_H
 #define APYMANAGER_H
 
+#include <memory>
+#include <unordered_map>
+#include <utility>
 #include <vector>
 #include "APyInterp.h"
 
@@ -16,9 +19,9 @@ namespace tri::py {
         APyManager& operator=(const APyManager&) = delete;
 
         APyInterp* CreateInterpreter(const char* Name);
-        void DestroyInterpreter(Interpreter* Interpreter);
+        void DestroyInterpreter(Interpreter Interpreter);
 
-        Interpreter& operator[](const char* Name);
+        Interpreter operator[](const char* Name);
 
         static APyManager& GetManager() {
             static APyManager* instance = Instance;
@@ -35,7 +38,8 @@ namespace tri::py {
         APyManager();
         ~APyManager();
 
-        std::unordered_map<const char*, Interpreter> Intrepreters;
+        Interpreter CurrentInterpreter;
+        std::unordered_map<const char*, Interpreter> Interpreters;
         static APyManager* Instance;
     };
 }
